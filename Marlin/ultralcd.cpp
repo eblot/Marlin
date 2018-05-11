@@ -369,6 +369,21 @@ static void lcd_main_menu()
 #endif
     }
 #endif
+#ifdef LIGHT_SUPPORT
+	if(light_level>0) 
+	{	
+	  light_level = 0;
+	  MENU_ITEM(function, MSG_LIGHT_OFF, light_ctrl);
+	  light_level = LIGHT_LEVEL;
+	}
+	else 
+	{
+	  light_level = LIGHT_LEVEL;
+	  MENU_ITEM(function, MSG_LIGHT_ON, light_ctrl);
+	  light_level = 0;
+	}
+#endif
+
     END_MENU();
 }
 

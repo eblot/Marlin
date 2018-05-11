@@ -104,6 +104,8 @@
 #define MSG_STOP_PRINT                      "Stop print"
 #define MSG_CARD_MENU                       "Print from SD"
 #define MSG_NO_CARD                         "No SD card"
+#define MSG_LIGHT_ON					           "Light ON"
+#define MSG_LIGHT_OFF					        "Light OFF"
 #define MSG_DWELL                           "Sleep..."
 #define MSG_USERWAIT                        "Wait for user..."
 #define MSG_RESUMING                        "Resuming print"

@@ -387,6 +387,10 @@ static uint8_t tmp_extruder;
 
 bool Stopped=false;
 
+#ifdef LIGHT_SUPPORT
+int light_level = 0;
+#endif
+
 #if NUM_SERVOS > 0
   Servo servos[NUM_SERVOS];
 #endif
@@ -552,6 +556,13 @@ void servo_init()
   servos[servo_endstops[Z_AXIS]].detach();
   #endif
 }
+
+#ifdef LIGHT_SUPPORT
+void light_ctrl(){
+  pinMode(LIGHT_PIN, OUTPUT);
+  analogWrite(LIGHT_PIN,light_level);
+}
+#endif
 
 
 void setup()
