@@ -1098,17 +1098,6 @@ void lcd_quick_feedback(const bool clear_buttons) {
       MENU_ITEM(submenu, MSG_DEBUG_MENU, lcd_debug_menu);
     #endif
 
-    //
-    // Set Case light on/off/brightness
-    //
-    #if ENABLED(MENU_ITEM_CASE_LIGHT)
-      if (USEABLE_HARDWARE_PWM(CASE_LIGHT_PIN)) {
-        MENU_ITEM(submenu, MSG_CASE_LIGHT, case_light_menu);
-      }
-      else
-        MENU_ITEM_EDIT_CALLBACK(bool, MSG_CASE_LIGHT, (bool*)&case_light_on, update_case_light);
-    #endif
-
     if (planner.movesplanned() || IS_SD_PRINTING)
       MENU_ITEM(submenu, MSG_TUNE, lcd_tune_menu);
     else
@@ -1146,6 +1135,17 @@ void lcd_quick_feedback(const bool clear_buttons) {
 
     #if ENABLED(LED_CONTROL_MENU)
       MENU_ITEM(submenu, MSG_LED_CONTROL, lcd_led_menu);
+    #endif
+
+    //
+    // Set Case light on/off/brightness
+    //
+    #if ENABLED(MENU_ITEM_CASE_LIGHT)
+      if (USEABLE_HARDWARE_PWM(CASE_LIGHT_PIN)) {
+        MENU_ITEM(submenu, MSG_CASE_LIGHT, case_light_menu);
+      }
+      else
+        MENU_ITEM_EDIT_CALLBACK(bool, MSG_CASE_LIGHT, (bool*)&case_light_on, update_case_light);
     #endif
 
     END_MENU();
@@ -2657,6 +2657,30 @@ void lcd_quick_feedback(const bool clear_buttons) {
     //
     MENU_BACK(MSG_MAIN);
 
+    #if HAS_TEMP_HOTEND
+
+      //
+      // Cooldown
+      //
+      bool has_heat = false;
+      HOTEND_LOOP() if (thermalManager.target_temperature[HOTEND_INDEX]) { has_heat = true; break; }
+      #if HAS_HEATED_BED
+        if (thermalManager.target_temperature_bed) has_heat = true;
+      #endif
+      if (has_heat) MENU_ITEM(function, MSG_COOLDOWN, lcd_cooldown);
+
+      //
+      // Preheat for Material 1 and 2
+      //
+      #if TEMP_SENSOR_1 != 0 || TEMP_SENSOR_2 != 0 || TEMP_SENSOR_3 != 0 || TEMP_SENSOR_4 != 0 || HAS_HEATED_BED
+        MENU_ITEM(submenu, MSG_PREHEAT_1, lcd_preheat_m1_menu);
+        MENU_ITEM(submenu, MSG_PREHEAT_2, lcd_preheat_m2_menu);
+      #else
+        MENU_ITEM(function, MSG_PREHEAT_1, lcd_preheat_m1_e0_only);
+        MENU_ITEM(function, MSG_PREHEAT_2, lcd_preheat_m2_e0_only);
+      #endif
+
+    #endif // HAS_TEMP_HOTEND
     //
     // Move Axis
     //
@@ -2743,31 +2767,6 @@ void lcd_quick_feedback(const bool clear_buttons) {
         #endif
       }
     #endif // ADVANCED_PAUSE_FEATURE
-
-    #if HAS_TEMP_HOTEND
-
-      //
-      // Cooldown
-      //
-      bool has_heat = false;
-      HOTEND_LOOP() if (thermalManager.target_temperature[HOTEND_INDEX]) { has_heat = true; break; }
-      #if HAS_HEATED_BED
-        if (thermalManager.target_temperature_bed) has_heat = true;
-      #endif
-      if (has_heat) MENU_ITEM(function, MSG_COOLDOWN, lcd_cooldown);
-
-      //
-      // Preheat for Material 1 and 2
-      //
-      #if TEMP_SENSOR_1 != 0 || TEMP_SENSOR_2 != 0 || TEMP_SENSOR_3 != 0 || TEMP_SENSOR_4 != 0 || HAS_HEATED_BED
-        MENU_ITEM(submenu, MSG_PREHEAT_1, lcd_preheat_m1_menu);
-        MENU_ITEM(submenu, MSG_PREHEAT_2, lcd_preheat_m2_menu);
-      #else
-        MENU_ITEM(function, MSG_PREHEAT_1, lcd_preheat_m1_e0_only);
-        MENU_ITEM(function, MSG_PREHEAT_2, lcd_preheat_m2_e0_only);
-      #endif
-
-    #endif // HAS_TEMP_HOTEND
 
     //
     // BLTouch Self-Test and Reset
