@@ -1486,16 +1486,16 @@
 #if ENABLED(CUSTOM_USER_MENUS)
   #define USER_SCRIPT_DONE "M117 User Script Done"
   #define USER_SCRIPT_AUDIBLE_FEEDBACK
-  //#define USER_SCRIPT_RETURN  // Return to status screen after a script
+  #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "Preheat for PLA"
-  #define USER_GCODE_1 "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+  #define USER_GCODE_1 "M355 P255 S1\nM140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
 
   #define USER_DESC_2 "Home & Info"
-  #define USER_GCODE_2 "G28\nM503"
+  #define USER_GCODE_2 "M355 P255 S1\nG28\nG0 Z30"
 
   #define USER_DESC_3 "Change filament"
-  #define USER_GCODE_3 "G92 E0\nG1 E" STRINGIFY(CHANGE_FILAMENT_LENGTH_E0)
+  #define USER_GCODE_3 "M355 P255 S1\nG92 E0\nG1 E" STRINGIFY(CHANGE_FILAMENT_LENGTH_E0) 
 #endif
 
 /**

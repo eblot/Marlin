@@ -818,8 +818,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
 
   void lcd_completion_feedback(const bool good/*=true*/) {
     if (good) {
-      lcd_buzz(100, 659);
-      lcd_buzz(100, 698);
+      lcd_buzz(20, LCD_FEEDBACK_FREQUENCY_HZ);
     }
     else lcd_buzz(20, 440);
   }
@@ -951,8 +950,10 @@ void lcd_quick_feedback(const bool clear_buttons) {
       // ^ Main
       //
       MENU_BACK(MSG_MAIN);
-      MENU_ITEM_EDIT_CALLBACK(int8, MSG_CASE_LIGHT_BRIGHTNESS, &case_light_brightness, 0, 255, update_case_light, true);
       MENU_ITEM_EDIT_CALLBACK(bool, MSG_CASE_LIGHT, (bool*)&case_light_on, update_case_light);
+      if (USEABLE_HARDWARE_PWM(CASE_LIGHT_PIN)) {
+        MENU_ITEM_EDIT_CALLBACK(int8, MSG_CASE_LIGHT_BRIGHTNESS, &case_light_brightness, 0, 255, update_case_light, true);
+      }
       END_MENU();
     }
   #endif // MENU_ITEM_CASE_LIGHT
